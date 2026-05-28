@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculus for Computer Science — Interactive Toolkit</title>
+<meta name="description" content="Interactive web companion to the TI-84 BASIC Calculus toolkit. Limits, derivatives, integrals, Maclaurin series, gradients, directional derivatives, tangent planes, and critical points — visualized live.">
+<link rel="preconnect" href="https://cdn.plot.ly">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.2/math.min.js"></script>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+</head>
+<body>
+
+<nav class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark">∫</div>
+    <div class="brand-text">
+      <div class="brand-title">Calculus<br>Toolkit</div>
+      <div class="brand-sub">CS · IE University</div>
+    </div>
+  </div>
+  <ul class="nav-list">
+    <li><a href="#home" data-section="home" class="nav-link active"><span class="nav-code">↳</span> Overview</a></li>
+    <li class="nav-group">Single Variable</li>
+    <li><a href="#limt" data-section="limt" class="nav-link"><span class="nav-code">LIMT</span> Limits</a></li>
+    <li><a href="#cont" data-section="cont" class="nav-link"><span class="nav-code">CONT</span> Continuity</a></li>
+    <li><a href="#der1" data-section="der1" class="nav-link"><span class="nav-code">DER1</span> Derivative @ point</a></li>
+    <li><a href="#der2" data-section="der2" class="nav-link"><span class="nav-code">DER2</span> Concavity</a></li>
+    <li><a href="#impl" data-section="impl" class="nav-link"><span class="nav-code">IMPL</span> Implicit diff.</a></li>
+    <li><a href="#int1" data-section="int1" class="nav-link"><span class="nav-code">INT1</span> Definite integral</a></li>
+    <li><a href="#macl" data-section="macl" class="nav-link"><span class="nav-code">MACL</span> Maclaurin series</a></li>
+    <li class="nav-group">Multivariable</li>
+    <li><a href="#grad" data-section="grad" class="nav-link"><span class="nav-code">GRAD</span> Gradient</a></li>
+    <li><a href="#dder" data-section="dder" class="nav-link"><span class="nav-code">DDER</span> Directional deriv.</a></li>
+    <li><a href="#tanp" data-section="tanp" class="nav-link"><span class="nav-code">TANP</span> Tangent plane</a></li>
+    <li><a href="#crit" data-section="crit" class="nav-link"><span class="nav-code">CRIT</span> Critical points</a></li>
+    <li class="nav-group">Reference</li>
+    <li><a href="#syntax" data-section="syntax" class="nav-link"><span class="nav-code">?</span> Syntax guide</a></li>
+  </ul>
+  <div class="sidebar-foot">
+    <a href="https://github.com/andreaisabelmontana/Calculus-For-Computer-Science" target="_blank" rel="noopener">GitHub repo →</a>
+  </div>
+</nav>
+
+<main class="main">
+
+  <section id="home" class="module active">
+    <div class="hero">
+      <div class="hero-eyebrow">IE University · School of Science &amp; Technology</div>
+      <h1 class="hero-title">Calculus for Computer Science<span class="hero-accent">.</span></h1>
+      <p class="hero-sub">An interactive web companion to the TI-84 Plus CE programming toolkit by Andrea Montana. Every module from the research paper, rebuilt as a live visualization you can play with right here.</p>
+      <div class="hero-stats">
+        <div><span class="stat-num">11</span><span class="stat-label">modules</span></div>
+        <div><span class="stat-num">2 + 3D</span><span class="stat-label">visualizations</span></div>
+        <div><span class="stat-num">0</span><span class="stat-label">install</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>What this is</h2>
+      <p>The accompanying research paper — <em>Calculus for Computer Science: TI-84 Programming Toolkit</em> — designs eleven TI-BASIC programs that turn a graphing calculator into a lightweight computational assistant. Each program automates one piece of single- or multi-variable calculus.</p>
+      <p>This site is the same toolkit, in a browser. Each module shows the math, lets you change inputs, runs the same numerical method the calculator uses, and visualizes the result. The TI-BASIC source for every module is reproduced inside its section.</p>
+    </div>
+
+    <div class="grid-modules">
+      <a class="mod-card" href="#limt" data-section="limt"><span class="mod-code">LIMT</span><span class="mod-name">Limit estimation</span><span class="mod-desc">Two-sided numeric table + DNE detector.</span></a>
+      <a class="mod-card" href="#cont" data-section="cont"><span class="mod-code">CONT</span><span class="mod-name">Continuity check</span><span class="mod-desc">Jump · removable · continuous classifier.</span></a>
+      <a class="mod-card" href="#der1" data-section="der1"><span class="mod-code">DER1</span><span class="mod-name">Derivative at a point</span><span class="mod-desc">f′(a) and tangent line, draggable a.</span></a>
+      <a class="mod-card" href="#der2" data-section="der2"><span class="mod-code">DER2</span><span class="mod-name">Second derivative</span><span class="mod-desc">Concavity and inflection candidates.</span></a>
+      <a class="mod-card" href="#impl" data-section="impl"><span class="mod-code">IMPL</span><span class="mod-name">Implicit diff.</span><span class="mod-desc">dy/dx = −F<sub>x</sub>/F<sub>y</sub> on a level curve.</span></a>
+      <a class="mod-card" href="#int1" data-section="int1"><span class="mod-code">INT1</span><span class="mod-name">Definite integral</span><span class="mod-desc">Shaded area + Riemann sum overlay.</span></a>
+      <a class="mod-card" href="#macl" data-section="macl"><span class="mod-code">MACL</span><span class="mod-name">Maclaurin series</span><span class="mod-desc">Polynomial approximations up to degree 6.</span></a>
+      <a class="mod-card" href="#grad" data-section="grad"><span class="mod-code">GRAD</span><span class="mod-name">Gradient vector</span><span class="mod-desc">∇f on a 3-D surface and 2-D contour.</span></a>
+      <a class="mod-card" href="#dder" data-section="dder"><span class="mod-code">DDER</span><span class="mod-name">Directional deriv.</span><span class="mod-desc">D<sub>u</sub>f, with auto-normalised direction.</span></a>
+      <a class="mod-card" href="#tanp" data-section="tanp"><span class="mod-code">TANP</span><span class="mod-name">Tangent plane</span><span class="mod-desc">Plane through a surface, drawn in 3-D.</span></a>
+      <a class="mod-card" href="#crit" data-section="crit"><span class="mod-code">CRIT</span><span class="mod-name">Critical-point test</span><span class="mod-desc">Second-derivative discriminant D = f<sub>xx</sub>f<sub>yy</sub> − f<sub>xy</sub>².</span></a>
+    </div>
+
+    <div class="card">
+      <h2>How to use a module</h2>
+      <ol>
+        <li>Pick a module from the sidebar.</li>
+        <li>Edit the function and any points / intervals. Examples from the paper's exam questions are preloaded.</li>
+        <li>Press <kbd>Compute</kbd> (or just hit Enter). Numeric output and the plot update together.</li>
+        <li>Each module shows the TI-BASIC source it mirrors, so you can compare the calculator workflow side by side.</li>
+      </ol>
+      <p class="muted">Tip: function syntax uses <code>^</code> for powers, <code>*</code> for multiplication, and standard names <code>sin, cos, exp, log, sqrt, abs</code>. Use <code>log</code> for natural log (math.js convention).</p>
+    </div>
+  </section>
+
+  <!-- ====================== LIMT ====================== -->
+  <section id="limt" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">LIMT</span>
+      <h2>Numeric limit estimation</h2>
+      <p class="mod-tagline">Estimate $\lim_{x \to a} f(x)$ by sampling from both sides, then flag whether the limit exists.</p>
+    </div>
+    <div class="mod-grid">
+      <div class="panel">
+        <label>f(x) =<input type="text" id="limt-f" value="sin(x)/x"></label>
+        <label>a =<input type="number" id="limt-a" value="0" step="any"></label>
+        <button class="btn" data-run="limt">Compute</button>
+        <div class="result" id="limt-out"></div>
+        <details class="src">
+          <summary>TI-BASIC source — <code>PROGRAM:LIMT</code></summary>
+          <pre id="src-limt"></pre>
+        </details>
+      </div>
+      <div class="plot" id="limt-plot"></div>
+    </div>
+  </section>
+
+  <!-- ====================== CONT ====================== -->
+  <section id="cont" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">CONT</span>
+      <h2>Continuity check at $x = a$</h2>
+      <p class="mod-tagline">Compares one-sided limits with $f(a)$ to classify: continuous, removable discontinuity, or jump.</p>
+    </div>
+    <div class="mod-grid">
+      <div class="panel">
+        <label>f(x) =<input type="text" id="cont-f" value="(x^2-1)/(x-1)"></label>
+        <label>a =<input type="number" id="cont-a" value="1" step="any"></label>
+        <button class="btn" data-run="cont">Compute</button>
+        <div class="result" id="cont-out"></div>
+        <details class="src"><summary>TI-BASIC source — <code>PROGRAM:CONT</code></summary><pre id="src-cont"></pre></details>
+      </div>
+      <div class="plot" id="cont-plot"></div>
+    </div>
+  </section>
+
+  <!-- ====================== DER1 ====================== -->
+  <section id="der1" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">DER1</span>
+      <h2>First derivative at a point</h2>
+      <p class="mod-tagline">Computes $f'(a)$ numerically and draws the tangent line $y = f'(a)(x-a) + f(a)$.</p>
+    </div>
+    <div class="mod-grid">
+      <div class="panel">
+        <label>f(x) =<input type="text" id="der1-f" value="x^3 - 2*x"></label>
+        <label>a = <span id="der1-aval">1.00</span>
+          <input type="range" id="der1-a" min="-4" max="4" step="0.05" value="1">
+        </label>
+        <button class="btn" data-run="der1">Compute</button>
+        <div class="result" id="der1-out"></div>
+        <details class="src"><summary>TI-BASIC source — <code>PROGRAM:DER1</code></summary><pre id="src-der1"></pre></details>
+      </div>
+      <div class="plot" id="der1-plot"></div>
+    </div>
+  </section>
+
+  <!-- ====================== DER2 ====================== -->
+  <section id="der2" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">DER2</span>
+      <h2>Second derivative &amp; concavity</h2>
+      <p class="mod-tagline">Plots $f$, $f'$ and $f''$ together; flags concavity and inflection candidates at $x=a$.</p>
+    </div>
+    <div class="mod-grid">
+      <div class="panel">
+        <label>f(x) =<input type="text" id="der2-f" value="x^3 - 3*x"></label>
+        <label>a =<input type="number" id="der2-a" value="0" step="any"></label>
+        <button class="btn" data-run="der2">Compute</button>
+        <div class="result" id="der2-out"></div>
+        <details class="src"><summary>TI-BASIC source — <code>PROGRAM:DER2</code></summary><pre id="src-der2"></pre></details>
+      </div>
+      <div class="plot" id="der2-plot"></div>
+    </div>
+  </section>
+
+  <!-- ====================== IMPL ====================== -->
+  <section id="impl" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">IMPL</span>
+      <h2>Implicit differentiation</h2>
+      <p class="mod-tagline">For a curve defined by $F(x,y) = 0$, the slope is $\dfrac{dy}{dx} = -\dfrac{F_x}{F_y}$. The plot shows the level set and the tangent line.</p>
+    </div>
+    <div class="mod-grid">
+      <div class="panel">
+        <label>F(x,y) =<input type="text" id="impl-f" value="x^2 + y^2 - 4"></label>
+        <label>x =<input type="number" id="impl-x" value="1" step="any"></label>
+        <label>y =<input type="number" id="impl-y" value="1.7320508" step="any"></label>
+        <button class="btn" data-run="impl">Compute</button>
+        <div class="result" id="impl-out"></div>
+        <details class="src"><summary>TI-BASIC source — <code>PROGRAM:IMPL</code></summary><pre id="src-impl"></pre></details>
+      </div>
+      <div class="plot" id="impl-plot"></div>
+    </div>
+  </section>
+
+  <!-- ====================== INT1 ====================== -->
+  <section id="int1" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">INT1</span>
+      <h2>Definite integral &amp; Riemann sums</h2>
+      <p class="mod-tagline">Computes $\int_a^b f(x)\,dx$ and compares the four classic Riemann approximations alongside the exact value.</p>
+    </div>
+    <div class="mod-grid">
+      <div class="panel">
+        <label>f(x) =<input type="text" id="int1-f" value="x^2"></label>
+        <label>a =<input type="number" id="int1-a" value="0" step="any"></label>
+        <label>b =<input type="number" id="int1-b" value="2" step="any"></label>
+        <label>n = <span id="int1-nval">10</span>
+          <input type="range" id="int1-n" min="2" max="80" step="1" value="10">
+        </label>
+        <label>Method
+          <select id="int1-method">
+            <option value="left">Left rectangles</option>
+            <option value="right">Right rectangles</option>
+            <option value="mid" selected>Midpoint</option>
+            <option value="trap">Trapezoidal</option>
+            <option value="simp">Simpson</option>
+          </select>
+        </label>
+        <button class="btn" data-run="int1">Compute</button>
+        <div class="result" id="int1-out"></div>
+        <details class="src"><summary>TI-BASIC source — <code>PROGRAM:INT1</code></summary><pre id="src-int1"></pre></details>
+      </div>
+      <div class="plot" id="int1-plot"></div>
+    </div>
+  </section>
+
+  <!-- ====================== MACL ====================== -->
+  <section id="macl" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">MACL</span>
+      <h2>Maclaurin polynomial</h2>
+      <p class="mod-tagline">Builds $P_n(x) = \sum_{k=0}^{n} \frac{f^{(k)}(0)}{k!}x^k$ from numerical derivatives at the origin, and plots successive approximations against $f$.</p>
+    </div>
+    <div class="mod-grid">
+      <div class="panel">
+        <label>f(x) =<input type="text" id="macl-f" value="exp(x)"></label>
+        <label>Max degree n = <span id="macl-nval">4</span>
+          <input type="range" id="macl-n" min="1" max="6" step="1" value="4">
+        </label>
+        <label>Plot range ±<input type="number" id="macl-r" value="3" step="0.5" min="0.5"></label>
+        <button class="btn" data-run="macl">Compute</button>
+        <div class="result" id="macl-out"></div>
+        <details class="src"><summary>TI-BASIC source — <code>PROGRAM:MACL</code></summary><pre id="src-macl"></pre></details>
+      </div>
+      <div class="plot" id="macl-plot"></div>
+    </div>
+  </section>
+
+  <!-- ====================== GRAD ====================== -->
+  <section id="grad" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">GRAD</span>
+      <h2>Gradient vector $\nabla f$</h2>
+      <p class="mod-tagline">Computes $\nabla f = (f_x, f_y)$ at a point. Visualized on the 3-D surface and on the 2-D contour plot, where the gradient is always perpendicular to the level curve.</p>
+    </div>
+    <div class="mod-grid">
+      <div class="panel">
+        <label>f(x,y) =<input type="text" id="grad-f" value="x^2*y + 3*y^2"></label>
+        <label>x =<input type="number" id="grad-x" value="1" step="any"></label>
+        <label>y =<input type="number" id="grad-y" value="2" step="any"></label>
+        <button class="btn" data-run="grad">Compute</button>
+        <div class="result" id="grad-out"></div>
+        <details class="src"><summary>TI-BASIC source — <code>PROGRAM:GRAD</code></summary><pre id="src-grad"></pre></details>
+      </div>
+      <div class="plot-stack">
+        <div class="plot" id="grad-plot3d"></div>
+        <div class="plot" id="grad-plot2d"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== DDER ====================== -->
+  <section id="dder" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">DDER</span>
+      <h2>Directional derivative $D_u f$</h2>
+      <p class="mod-tagline">Auto-normalises the direction $\mathbf{u}$, then computes $D_u f = \nabla f \cdot \hat{\mathbf{u}}$. The 3-D plot shows the slice taken in direction $\mathbf{u}$.</p>
+    </div>
+    <div class="mod-grid">
+      <div class="panel">
+        <label>f(x,y) =<input type="text" id="dder-f" value="x^2*y + 3*y^2"></label>
+        <label>x =<input type="number" id="dder-x" value="1" step="any"></label>
+        <label>y =<input type="number" id="dder-y" value="2" step="any"></label>
+        <label>u₁ =<input type="number" id="dder-u1" value="3" step="any"></label>
+        <label>u₂ =<input type="number" id="dder-u2" value="-4" step="any"></label>
+        <button class="btn" data-run="dder">Compute</button>
+        <div class="result" id="dder-out"></div>
+        <details class="src"><summary>TI-BASIC source — <code>PROGRAM:DDER</code></summary><pre id="src-dder"></pre></details>
+      </div>
+      <div class="plot" id="dder-plot"></div>
+    </div>
+  </section>
+
+  <!-- ====================== TANP ====================== -->
+  <section id="tanp" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">TANP</span>
+      <h2>Tangent plane to $z = f(x,y)$</h2>
+      <p class="mod-tagline">$z = f(p,q) + f_x(p,q)(x-p) + f_y(p,q)(y-q)$. Drawn alongside the surface in 3-D.</p>
+    </div>
+    <div class="mod-grid">
+      <div class="panel">
+        <label>f(x,y) =<input type="text" id="tanp-f" value="log(x^2 + y + 2)"></label>
+        <label>x =<input type="number" id="tanp-x" value="1" step="any"></label>
+        <label>y =<input type="number" id="tanp-y" value="0" step="any"></label>
+        <button class="btn" data-run="tanp">Compute</button>
+        <div class="result" id="tanp-out"></div>
+        <details class="src"><summary>TI-BASIC source — <code>PROGRAM:TANP</code></summary><pre id="src-tanp"></pre></details>
+      </div>
+      <div class="plot" id="tanp-plot"></div>
+    </div>
+  </section>
+
+  <!-- ====================== CRIT ====================== -->
+  <section id="crit" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">CRIT</span>
+      <h2>Critical-point classification</h2>
+      <p class="mod-tagline">Second-derivative test: $D = f_{xx}f_{yy} - f_{xy}^2$. Local min if $D>0, f_{xx}>0$; local max if $D>0, f_{xx}<0$; saddle if $D<0$.</p>
+    </div>
+    <div class="mod-grid">
+      <div class="panel">
+        <label>f(x,y) =<input type="text" id="crit-f" value="x^3 - 3*x*y^2"></label>
+        <label>x =<input type="number" id="crit-x" value="0" step="any"></label>
+        <label>y =<input type="number" id="crit-y" value="0" step="any"></label>
+        <button class="btn" data-run="crit">Compute</button>
+        <div class="result" id="crit-out"></div>
+        <details class="src"><summary>TI-BASIC source — <code>PROGRAM:CRIT</code></summary><pre id="src-crit"></pre></details>
+      </div>
+      <div class="plot" id="crit-plot"></div>
+    </div>
+  </section>
+
+  <!-- ====================== SYNTAX ====================== -->
+  <section id="syntax" class="module">
+    <div class="mod-head">
+      <span class="mod-badge">?</span>
+      <h2>Syntax guide</h2>
+      <p class="mod-tagline">All inputs are parsed by <a href="https://mathjs.org/" target="_blank" rel="noopener">math.js</a>. Same rules across every module.</p>
+    </div>
+    <div class="card">
+      <table class="syntax">
+        <tr><th>You type</th><th>Meaning</th></tr>
+        <tr><td><code>x^2</code></td><td>$x^2$ — powers use <code>^</code></td></tr>
+        <tr><td><code>3*x*y</code></td><td>$3xy$ — multiplication is explicit with <code>*</code></td></tr>
+        <tr><td><code>sqrt(x)</code></td><td>$\sqrt{x}$</td></tr>
+        <tr><td><code>exp(x)</code></td><td>$e^x$</td></tr>
+        <tr><td><code>log(x)</code></td><td>$\ln x$ — natural log (math.js convention)</td></tr>
+        <tr><td><code>log10(x)</code></td><td>$\log_{10} x$</td></tr>
+        <tr><td><code>sin, cos, tan, asin, ...</code></td><td>Trig functions, radians</td></tr>
+        <tr><td><code>abs(x)</code></td><td>$|x|$</td></tr>
+        <tr><td><code>pi, e</code></td><td>Constants</td></tr>
+        <tr><td><code>(x^2-1)/(x-1)</code></td><td>Use parentheses freely</td></tr>
+      </table>
+      <h3>Sample functions from the paper</h3>
+      <ul class="examples">
+        <li><strong>Limit:</strong> <code>sin(x)/x</code> at <code>a=0</code></li>
+        <li><strong>Continuity:</strong> <code>(x^2-1)/(x-1)</code> at <code>a=1</code> (removable)</li>
+        <li><strong>Derivative:</strong> <code>x^3 - 2*x</code> at <code>a=1</code></li>
+        <li><strong>Integral:</strong> $\int_0^2 x^2\,dx = 8/3$</li>
+        <li><strong>Gradient (problem 11):</strong> <code>x^2*y + 3*y^2</code> at $(1,2)$</li>
+        <li><strong>Critical pts (problem 13):</strong> <code>x^3 - 3*x*y^2</code></li>
+        <li><strong>Tangent plane (problem 15):</strong> <code>log(x^2 + y + 2)</code> at $(1,0)$</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Built by <strong>Andrea Montana</strong> · Bachelor of Computer Science &amp; AI · IE University · 2026</p>
+    <p>Companion to the research <em>Calculus for Computer Science: TI-84 Programming Toolkit</em>, supervised by Carlos Gordon.</p>
+  </footer>
+
+</main>
+
+<button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">☰</button>
+
+<script src="app.js"></script>
+</body>
+</html>
